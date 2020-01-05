@@ -9,13 +9,37 @@
 	</h3>
 
 	<div class="formMain">
-		<form id="abc">
+		<form 
+			id="abc" 
+			zform-api-url="http://c3.yyang.net.cn/api/v2/resource/add"
+			zform-submit-method = 'customPhpApi'
+			zform-submit-before = 'submitBefore'
+			zform-submit-success = 'submitSuccess'
+		>
 			<p><strong>本库不依赖任何css样式，网页请自己设计制作。</strong></p>
-			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入手机号" name="mobile"/><br />
+			<input type="hidden" name="is_close_mem" value='1'/>
+			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入手机号" name="mobile"  zform-callback= 'is_mobile'/><br />
 			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入姓名" name="realname"/><br />
-			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入性别" name="sex"/><br />
 			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入生日"  name="birthday"/><br />
-			<button class="button" type="button" onclick="zform.println();return false;">获取所有值</button>
+			<input type="radio" name="sex" value="M" checked  zform-callback= 'is_sex'>男<br>
+			<input type="radio" name="sex" value="F"  zform-callback= 'is_sex'>女 <br />
+			<div>=====================</div>
+			 年龄: <select name="age"  zform-callback= 'check_age'>
+				<option value ="1">1岁</option>
+				<option value ="2">2岁</option>
+				<option value="5">5岁</option>
+				<option value="10">10岁</option>
+			  </select>
+			  <br /><br/>
+			<label><input name="cscode" type="checkbox" value="tklk"  zform-callback= 'check_cscode' />乐康2018 </label> 
+			<label><input name="cscode" type="checkbox" value="tk" zform-callback= 'check_cscode'/>泰康 </label> 
+			<label><input name="cscode" type="checkbox" value="pa" zform-callback= 'check_cscode' />平安 </label> 
+			<br/><br/>
+			<input type="checkbox" name="isagree" value="1" checked="checked"  zform-callback= 'check_isagree' />同意服务条款
+			<br/><br/>
+			<button class="button" type="button" onclick="alert(zform.println('abc'));return false;">获取所有值</button>
+			<button class="button" type="button" onclick="alert(zform.getConfig('abc'));return false;">获取配置</button>
+			<button class="button" type="button" onclick="zform.Submit('abc');return false;">提交</button>
 		</form>
 	</div>
 </body>
@@ -26,13 +50,65 @@ t.showName();
 </script> -->
 <script type="text/javascript" src="/js/myZform.js"></script>
 <script type="text/javascript">
-
-alert(zform.config({
-	form_id:'abc',
-	api_url:'https://www.yyang.net.cn'
-}));
 function alertAS(){
-	alert(zform.version())
+	alert("zform version:"+zform.version())
+}
+
+function is_mobile(value){
+	if(!(/^1[3456789]\d{9}$/.test(value))){ 
+		alert("手机号码有误，请重填");  
+		return false; 
+	}
+	return true;
+}
+function is_sex(value){
+	if(!value){
+		alert("性别不能为空");
+		return false;
+	}
+	return true;
+}
+
+function check_age(value){
+	if (value<3){
+		alert("年龄不能少于3岁");
+	}
+	return true;
+}
+
+function check_cscode (value){
+	if(!value){
+		alert("请选择cscode");
+		return false;
+	}
+
+	var arr = value.split(',');
+	if (arr.length>1) {
+		alert("暂时只支持一个cscode哦");
+		return false;
+	}
+
+	return true;
+}
+
+function check_isagree(value){
+	if(!value){
+		alert("请同意服务条款");
+		return false;
+	}
+	return true;
+}
+
+//提交之前的调用,所有的自定义验证函数也可以放在这里，返回true
+function submitBefore(){
+	alert("提交前调用的函数");
+
+	return true;
+}
+
+//提交成功回调
+function submitSuccess(){
+	alert("提交成功函数");
 }
 	</script>
 </html>

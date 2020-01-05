@@ -1,6 +1,10 @@
-const axios = require('axios');
 const zjq = require('jquery');
 let util = require('./util.js');
+let api = require('./api.js');
+
+//配置支持的属性
+const prex = 'zform-';
+const conf= [prex+'api-url', prex+'submit-before', prex+'submit-success', prex+'submit-method']
 
 const zform = {
 	id:'formid',
@@ -15,19 +19,47 @@ zform.config = ({form_id, api_url }) => {
 	return api_url;
 }
 
-zform.println = () => {
-	let eleList = util.getElements(this.id);
-	console.info(eleList);
-	const mobile = zjq('input[name="mobile"]').val();
-	alert(mobile);
+zform.getConfig = (form_id) => {
+	$_form = zjq('#'+form_id);
+	let configList = {}
+	conf.map(function (key) {
+		let value = $_form.attr(key);
+		configList[key] = value
+	})
+	return JSON.stringify(configList);
 }
 
+zform.println = (form_id) => {
+	// let eleList = util.serializeForm(form_id);
+	let eleList = util.InputFormCallBack(form_id);
+	return JSON.stringify(eleList); 
+}
 
+zform.Submit = (form_id) => {
+	let eleList = util.InputFormCallBack(form_id);
+	let is_ver_success = true;
+	
+	//验证是否成功
+	for (var i = 0; i < eleList.length; i++) {
+		let ele = eleList[i];
+		if (ele.callback && !window[ele.callback].call(this, ele.value)){ //每个回调函数后需要返回true/false
+			is_ver_success = false;
+			break;
+		}
+	}
 
-// exports default {
-//     add: function (num1, num2) {
-//          return num1 + num2; 
-//     }         
-// };
+	//验证通过
+	if (is_ver_success) {
+		$_form = zjq('#'+form_id);
+		let apiUrl = $_form.attr(prex+'api-url');
+		let submitMethod = $_form.attr(prex+'submit-method');
+		if (submitMethod == 'customPhpApi') {
+			return api.customPhpApi(apiUrl, eleList);
+		}
+		
+	}
+	
+	return false;
+}
 
 module.exports = zform
