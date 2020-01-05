@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	#include("@/include/meta.html")
+</head>
+<body>
+	<h3>
+		<a href="javascript:;" onclick="alertAS();">点击事件</a>
+	</h3>
+
+	<div class="formMain">
+		<form id="abc">
+			<p><strong>本库不依赖任何css样式，网页请自己设计制作。</strong></p>
+			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入手机号" name="mobile"/><br />
+			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入姓名" name="realname"/><br />
+			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入性别" name="sex"/><br />
+			<input class="formInput" autocomplete="off"  type="text" placeholder="请输入生日"  name="birthday"/><br />
+			<button class="button" type="button" onclick="zform.println();return false;">获取所有值</button>
+		</form>
+	</div>
+</body>
+<!-- <script type="text/javascript" src="./dist/zform.js"></script> -->
+<!-- <script type="text/javascript">
+var t = new Test();
+t.showName();
+</script> -->
+<script type="text/javascript" src="/js/myZform.js"></script>
+<script type="text/javascript">
+
+alert(zform.config({
+	form_id:'abc',
+	api_url:'https://www.yyang.net.cn'
+}));
+function alertAS(){
+	alert(zform.version())
+}
+	</script>
+</html>
