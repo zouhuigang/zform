@@ -140,7 +140,7 @@ exports.InputFormCallBack = function (form_id) {
 		let name = element.name;
 		let type = element.type.toLowerCase()
 		let uniKey = name+'_'+type
-		if(filterList.indexOf(uniKey)>0){
+		if(filterList.indexOf(uniKey)>-1){
 			continue
 		}
 		let inputOne = {}
