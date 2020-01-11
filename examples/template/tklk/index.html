@@ -5,35 +5,29 @@
 </head>
 <body>
 	#include("@/include/header.html")
-	<h3>
-		<a href="javascript:;" onclick="alertAS();">点击事件</a>
-	</h3>
 
 	<div class="formMain">
 		<form 
 			id="abc" 
-			zform-api-url="/api/v2/resource/add"
-			zform-query = 'siteid|abc'
-			zform-submit-method = '__CUSTOM_API__'
+			zform-api-url="/api/v1.0/receivedata"
+			zform-query = 'siteid|need_gadget|is_close_mem'
+			zform-submit-method = '__JSON_RAW__'
 			zform-submit-before = 'submitBefore'
 			zform-submit-success = 'submitSuccess'
 			zform-submit-error = 'submitError'
+			zform-sms-verify = 'verCode'
+			zform-sms-mobile_name = 'mobile'
+			zform-sms-code_name = 'sms_code'
 		>
-			<p><strong>本库不依赖任何css样式，网页请自己设计制作。</strong></p>
+			<p><strong>泰康-"乐康2018"产品测试</strong></p>
 			<input type="hidden" name="is_close_mem" value='1'/>
+			<input class="formInput" autocomplete="off"  value='王大二' type="text" placeholder="投保人姓名" name="realname"/><br />
 			<input class="formInput" autocomplete="off"  value='13006995834' type="text" placeholder="请输入手机号" name="mobile"  zform-callback= 'is_mobile'/><br />
-			<input class="formInput" autocomplete="off"  value='王大二' type="text" placeholder="请输入姓名" name="realname"/><br />
-			<input class="formInput" autocomplete="off" value='1994-01-09' type="text" placeholder="请输入生日"  name="birthday"/><br />
-			<input type="radio" name="sex" value="M" checked  zform-callback= 'is_sex'>男<br>
-			<input type="radio" name="sex" value="F"  zform-callback= 'is_sex'>女 <br />
-			<div>=====================</div>
-			 年龄: <select name="age"  zform-callback= 'check_age'>
-				<option value ="1">1岁</option>
-				<option value ="2">2岁</option>
-				<option value="5">5岁</option>
-				<option value="10">10岁</option>
-			  </select>
-			  <br /><br/>
+			<input class="formInput" autocomplete="off" value='110101199003076413' type="text" placeholder="投/被保人身份证号"  name="idcard"/><br />
+			<input class="formInput" autocomplete="off" type="text"  value="" zform-callback= 'is_code' placeholder="验证码"  name= 'sms_code'><br />
+			<input class="button1" type="button" id="zphone" zform-callback='smsHandle' value="获取验证码" onclick="return zform.Core.SendCode('abc','zphone');" />
+			<!-- <a href="javascript:;" onClick="return _code.sendRcode()" id="zphone" >获取验证码</a> -->
+			<br /><br/>
 			<label><input name="cscode" type="checkbox" value="tklk" checked="checked" zform-callback= 'check_cscode' />乐康2018 </label> 
 			<label><input name="cscode" type="checkbox" value="tk" zform-callback= 'check_cscode'/>泰康 </label> 
 			<label><input name="cscode" type="checkbox" value="pa" zform-callback= 'check_cscode' />平安 </label> 
@@ -103,8 +97,26 @@ function check_isagree(value){
 	return true;
 }
 
-function submitSuccess (res){
-	alert("网络请求成功,返回的数据为:\n" + JSON.stringify(res));
+function is_code(value) {
+	if(!value){
+		alert("短信验证码不能为空");
+		return false;
+	}
+	return true;
+}
+
+
+function smsHandle(mobile,tips){
+	alert(tips);
+}
+
+function submitSuccess (method, res){
+	if (method == '__SEND_CODE__') { 
+		var timer = new zform.Timeer.Timeer('abc','zphone',60);
+		timer.Start();
+	}
+	
+	alert("网络请求成功【"+method+"】,返回的数据为:\n" + JSON.stringify(res));
 }
 
 function submitBefore(){
@@ -112,8 +124,17 @@ function submitBefore(){
 	return true;
 }
 
-function submitError (err) {
-	alert("网络请求出错,错误为:\n" + JSON.stringify(err));
+function submitError (method, err) {
+	alert("网络请求出错【"+method+"】,错误为:\n" + err);
+}
+
+function verCode(user_mobile, user_code, background_verfiy_result){
+	if(!background_verfiy_result){
+		console.info(user_mobile, user_code, background_verfiy_result);
+		alert(user_mobile+",短信验证失败");
+		return false;
+	}
+	return true;
 }
 
 </script>

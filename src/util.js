@@ -4,6 +4,42 @@ exports.showString = function (str) {
 	return str;
 }
 
+//判断是否为空
+exports.IsNull = function (obj) {
+	if(typeof obj == "undefined" || obj == null || obj == ""){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+//根据一个参数名获取Url中的参数
+exports.getQueryString = (key)=> {
+	var reg = new RegExp("(^|&)"+key+"=([^&]*)(&|$)");
+	var result = window.location.search.substr(1).match(reg);
+	return result?decodeURIComponent(result[2]):null;
+}
+
+
+//获取所有的url中的参数
+exports.GetUrlAllRequest =  () => {
+	let param = {}
+	var str = location.href;
+	var num = str.indexOf('?');
+	str = str.substr(num + 1); // 取得所有参数   stringvar.substr(start [, length ]
+	var arr = str.split('&'); // 各个参数放到数组里
+	for (var i = 0; i < arr.length; i++) {
+		num = arr[i].indexOf('=');
+		if (num > 0) {
+			var name = arr[i].substring(0, num);
+			value = arr[i].substr(num + 1);
+			param[name] = value;
+		}
+	}
+	return param
+};
+
 //获取所有的Intpu对象加select对象
 exports.getElements = function (formId) {
 	var form = document.getElementById(formId);
@@ -150,6 +186,27 @@ exports.InputFormCallBack = function (form_id) {
 		inputOne['callback'] =  exports.getCallback(name, type)
 		dataList.push(inputOne);
 		filterList.push(uniKey);
+	}
+
+	//是否解析url中的参数,只覆盖hidden中的值__GET_ALL_COVER_HIDDEN__
+	$_form = zjq('#'+form_id);
+	let _query = $_form.attr('zform-query');
+	let queryList = _query.split('|')
+	if (queryList.length>0) {
+		for(var i in queryList){
+			let item = queryList[i];
+			let value = exports.getQueryString(item)
+			if (!exports.IsNull(value)) {
+				let callback
+				let inputOne = {}
+				inputOne['name'] = item
+				inputOne['type'] = 'text'
+				inputOne['value'] = value
+				inputOne['callback'] =  callback
+				dataList.push(inputOne);
+			}
+		
+		}
 	}
 	return dataList;
 }
