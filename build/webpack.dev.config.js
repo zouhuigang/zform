@@ -54,5 +54,23 @@ module.exports = merge(webpackBaseConfig, {
 				loader: 'html-withimg-loader'
 			}
 		]
+	},
+    devServer: {//跨域解决
+			historyApiFallback: true,
+			disableHostCheck: true,
+			hot: true,
+			inline: true,
+			overlay: true,
+			stats: { colors: true },
+			port: '8080',
+			proxy: {
+				'/api': {
+					target:'http://c3.yyang.net.cn', 
+					changeOrigin:true,
+					pathRewrite:{  
+						'^/api': '/api'
+					}
+				}
+			}
 	}
 });

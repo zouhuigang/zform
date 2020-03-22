@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta charset="utf-8">
+<title>乐康2018_10000元重疾险免费领 - 泰康人寿</title>
+</head>
+<link href="css/index.css" rel="stylesheet" type="text/css">
+<link href="css/main_fields.css" rel="stylesheet" type="text/css">
+<link href="css/brand_fields.css" rel="stylesheet" type="text/css">
+<link href="css/footer.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+
+<body>
+
+
+	<div class="banner">
+		<img src="images/htk_banner_1.jpg" width="100%" >
+	</div>
+	
+	<div class="header_fields">
+	</div>
+	
+	<div class="main_fields">
+		<form 
+			id="information"  
+			zform-api-url="/api/v1.0/receivedata" 
+			zform-query = 'siteid|need_gadget|is_close_mem' 
+			zform-submit-method = '__JSON_RAW__' 
+			zform-submit-before = 'submitBefore' 
+			zform-submit-success = 'submitSuccess' 
+			zform-submit-error = 'submitError' >
+			<input class="input_name" id="" type="text" name="realname" placeholder="投/被保人姓名" value="" zform-callback="is_relanme" />
+			<input class="input_identity" id="" type="text" name="idcard" placeholder="投/被保人身份证号码" value="" zform-callback="is_idcard" />
+			<input class="input_tel" id="" type="text" name="mobile" placeholder="手机号码" value="" zform-callback="is_mobile" />
+			<input class="input_check" id="" type="text" name="check" placeholder="请输入验证码" value="" zform-callback="is_code" />
+			<input class="input_obtain" type="button" id="zphone" zform-callback='smsHandle' value="获取验证码" onclick="return zform.Core.SendCode('information','mobile','zphone', 10);" />
+			<button class="but" onClick="zform.Core.Submit('information');return false;">立即预约</button>
+		</form>
+		<div class="plugins">
+			<!--<label><input type="radio" name="" value="">单选</label>-->
+			<label><input type="checkbox" name="" value="">&nbsp;我确认投保人为本人，已知晓并许可泰康人寿专线致电我沟通赠险领取事宜。</label>
+		</div>
+	</div>
+	<!-- form表单通用JS -->
+	<script type="text/javascript" src="http://cdn-oss.yyang.net.cn/static/zform/1.0.0/zform.min.js"></script>
+	<script type="text/javascript">
+	function alertAS(){
+		alert("zform version:"+zform.version())
+	}
+	function is_relanme(value){
+		if(!value){
+			alert("姓名不能为空");
+			return false;
+		}
+		return true;
+	}
+	function is_idcard(value){
+		if(!value){
+			alert("身份证号码不能为空");  
+			return false; 
+		}
+		if(value.length < 15){
+			alert("身份证非法");  
+			return false; 
+		}
+		return true;
+	}
+
+	function is_mobile(value){
+		if(!(/^1[3456789]\d{9}$/.test(value))){ 
+			alert("手机号码有误，请重填");  
+			return false; 
+		}
+		return true;
+	}
+	function is_sex(value){
+		if(!value){
+			alert("性别不能为空");
+			return false;
+		}
+		return true;
+	}
+	function check_age(value){
+		if (value<3){
+			alert("年龄不能少于3岁");
+			return false;
+		}
+		return true;
+	}
+	function check_cscode (value){
+		if(!value){
+			alert("请选择cscode");
+			return false;
+		}
+
+		var arr = value.split(',');
+		if (arr.length>1) {
+			alert("暂时只支持一个cscode哦");
+			return false;
+		}
+
+		return true;
+	}
+
+	function check_isagree(value){
+		if(!value){
+			alert("请同意服务条款");
+			return false;
+		}
+		return true;
+	}
+	function is_code(value) {
+		if(!value){
+			alert("短信验证码不能为空");
+			return false;
+		}
+		return true;
+	}
+	function smsHandle(mobile,tips){
+		alert(tips);
+	}
+	function submitSuccess (method, res){
+		if (method == '__SEND_CODE__') { 
+			var timer = new zform.Timeer.Timeer('zphone',15);
+			timer.Start();
+			return false;
+		}
+		else{
+			var statusCode = res.status
+			if (statusCode == 200) {
+				$('.cd-popup').addClass('is-visible');
+			}else{
+				alert("提交失败"+statusCode);
+				return false;
+			}
+			
+		}
+		alert("网络请求成功【"+method+"】,返回的数据为:\n" + JSON.stringify(res));
+	}
+	function submitBefore(){
+		alert("提交前调用的函数");
+		return true;
+	}
+	function submitError (method, err) {
+		alert("网络请求出错【"+method+"】,错误为:\n" + err);
+	}
+	function verCode(user_mobile, user_code, background_verfiy_result){
+		if(!background_verfiy_result){
+			console.info(user_mobile, user_code, background_verfiy_result);
+			alert(user_mobile+",短信验证失败");
+			return false;
+		}
+		return true;
+	}
+	</script>
+	<div class="cd-popup" role="alert">
+		<div class="cd-popup-container">
+			<p>泰康“乐康2018”重大疾病保险计划</p>
+			<font size="2" color="red">您已领取泰康“乐康2018”10000元重疾险</font>
+			<br>
+			<font size="2" color="red">您已领取泰康“乐康2018”10000元重疾险</font>
+			<br>
+			<ul class="cd-buttons">
+				<li><a href="#">确认</a></li>
+			</ul>
+			<a href="#" class="cd-popup-close img-replace">关闭</a>
+		</div> <!-- cd-popup-container -->
+	</div> <!-- cd-popup -->
+	<script src="js/jquery.1.11.1.js"></script>
+	<script src="js/main.js"></script>
+	
+	<div class="brand_fields">
+		<img src="images/lk_instructions.jpg" width="100%" >
+	</div>
+	
+	<div class="footer">
+		<p>（乐康2018）适用“泰康e顺重大疾病保险条款”</p><br>
+		<p>*请仔细阅读产品条款，某些条件下我们不承担保险责任。</p>
+		<br>
+	</div>
+</body>
+</html>

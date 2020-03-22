@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Cache-Control" content="no-transform" /> 
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+<meta http-equiv="info" create_date="2016-10-01"  author="zouhuigang" version="2.0.1"/>
+<link rel="shortcut icon" type="image/x-icon"  href="../images/logo/favicon.ico">
+
+<style>
+	.formMain{
+		width:700px;
+		margin:0 auto;
+	}
+	.button {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		border-radius: 8px;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+	}
+	.button:hover {
+		box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+	}
+	.formInput {
+		height:35px;
+		width:200px;
+		margin-bottom:10px;
+	}
+	.button1{
+		width: 120px;
+		height:50px;
+		color: #fff;
+		background-color: #2d8cf0;
+		border-color: #2d8cf0;
+	}
+</style>
+</head>
+<body>
+
+	<div class="formMain">
+		<form 
+			id="abc" 
+			zform-api-url="/api/v1.0/receivedata"
+			zform-query = 'siteid|need_gadget|is_close_mem'
+			zform-submit-method = '__JSON_RAW__'
+			zform-submit-before = 'submitBefore'
+			zform-submit-success = 'submitSuccess'
+			zform-submit-error = 'submitError'
+			zform-sms-verify = 'verCode'
+			zform-sms-mobile_name = 'mobile'
+			zform-sms-code_name = 'sms_code'
+		>
+			<p><strong>泰康-"乐康2018"产品测试</strong></p>
+			<input type="hidden" name="is_close_mem" value='1'/>
+			<input class="formInput" autocomplete="off"  value='王大二' type="text" placeholder="投保人姓名" name="realname"/><br />
+			<input class="formInput" autocomplete="off"  value='13006995834' type="text" placeholder="请输入手机号" name="mobile"  zform-callback= 'is_mobile'/><br />
+			<input class="formInput" autocomplete="off" value='110101199003076413' type="text" placeholder="投/被保人身份证号"  name="idcard"/><br />
+			<input class="formInput" autocomplete="off" type="text"  value="" zform-callback= 'is_code' placeholder="验证码"  name= 'sms_code'><br />
+			<input class="button1" type="button" id="zphone" zform-callback='smsHandle' value="获取验证码" onclick="return zform.Core.SendCode('abc','mobile','zphone', 10);" />
+			<!-- <a href="javascript:;" onClick="return _code.sendRcode()" id="zphone" >获取验证码</a> -->
+			<br /><br/>
+			<label><input name="cscode" type="checkbox" value="tklk" checked="checked" zform-callback= 'check_cscode' />乐康2018 </label> 
+			<label><input name="cscode" type="checkbox" value="tk" zform-callback= 'check_cscode'/>泰康 </label> 
+			<label><input name="cscode" type="checkbox" value="pa" zform-callback= 'check_cscode' />平安 </label> 
+			<br/><br/>
+			<input type="checkbox" name="isagree" value="1" checked="checked"  zform-callback= 'check_isagree' />同意服务条款
+			<br/><br/>
+			<button class="button" type="button" onclick="alert(zform.Core.println('abc'));return false;">获取所有值</button>
+			<button class="button" type="button" onclick="alert(zform.Core.getConfig('abc'));return false;">获取配置</button>
+			<button class="button" type="button" onclick="zform.Core.Submit('abc');return false;">提交</button>
+		</form>
+	</div>
+</body>
+<!-- <script type="text/javascript" src="./dist/zform.js"></script> -->
+<!-- <script type="text/javascript">
+var t = new Test();
+t.showName();
+</script> -->
+<script type="text/javascript" src="http://cdn-oss.yyang.net.cn/static/zform/1.0.0/zform.min.js"></script>
+<script type="text/javascript">
+function alertAS(){
+	alert("zform version:"+zform.version())
+}
+
+function is_mobile(value){
+	if(!(/^1[3456789]\d{9}$/.test(value))){ 
+		alert("手机号码有误，请重填");  
+		return false; 
+	}
+	return true;
+}
+function is_sex(value){
+	if(!value){
+		alert("性别不能为空");
+		return false;
+	}
+	return true;
+}
+
+function check_age(value){
+	if (value<3){
+		alert("年龄不能少于3岁");
+		return false;
+	}
+	return true;
+}
+
+function check_cscode (value){
+	if(!value){
+		alert("请选择cscode");
+		return false;
+	}
+
+	var arr = value.split(',');
+	if (arr.length>1) {
+		alert("暂时只支持一个cscode哦");
+		return false;
+	}
+
+	return true;
+}
+
+function check_isagree(value){
+	if(!value){
+		alert("请同意服务条款");
+		return false;
+	}
+	return true;
+}
+
+function is_code(value) {
+	if(!value){
+		alert("短信验证码不能为空");
+		return false;
+	}
+	return true;
+}
+
+
+function smsHandle(mobile,tips){
+	alert(tips);
+}
+
+function submitSuccess (method, res){
+	if (method == '__SEND_CODE__') { 
+		var timer = new zform.Timeer.Timeer('zphone',15);
+		timer.Start();
+	}
+	
+	alert("网络请求成功【"+method+"】,返回的数据为:\n" + JSON.stringify(res));
+}
+
+function submitBefore(){
+	alert("提交前调用的函数");
+	return true;
+}
+
+function submitError (method, err) {
+	alert("网络请求出错【"+method+"】,错误为:\n" + err);
+}
+
+function verCode(user_mobile, user_code, background_verfiy_result){
+	if(!background_verfiy_result){
+		console.info(user_mobile, user_code, background_verfiy_result);
+		alert(user_mobile+",短信验证失败");
+		return false;
+	}
+	return true;
+}
+
+</script>
+</html>
