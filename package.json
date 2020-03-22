@@ -1,6 +1,6 @@
 {
 	"name": "zform",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Easy to create and validate forms",
 	"main": "dist/zform.js",
 	"scripts": {
