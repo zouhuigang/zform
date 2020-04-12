@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    #include("@/include/meta.html")
+    <style>
+        .pictrueBox {
+            overflow: auto;
+            width: 100%;
+            background: #fff;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+#include("@/include/header.html")
+<h3>
+    <a href="javascript:;" onclick="zform.Popup.alert('大家好，我是alert');">弹窗样式1-alert</a>
+</h3>
+
+
+<h3>
+    <a href="javascript:;" onclick="fullPage();">全屏弹窗-fullPage</a>
+    <a href="javascript:;" onclick=" zform.Popup.fullPage('hhhhh');">全屏弹窗-fullPage</a>
+</h3>
+
+</body>
+<script type="text/javascript" src="/js/myZform.js"></script>
+<script>
+    function fullPage() {
+        var strVar = "";
+        strVar += "<div class=\"pictrueBox\">\n";
+        strVar += "	<img src=\"https://marketing-static.oss-cn-shanghai.aliyuncs.com/static/rebot/product-intro.jpg\" class=\"pic-img\">\n";
+        strVar += "<\/div>\n";
+        zform.Popup.fullPage(strVar);
+    }
+</script>
+</html>

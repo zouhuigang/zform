@@ -1,50 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	#include("@/include/meta.html")
+    #include("@/include/meta.html")
 </head>
 <body>
-	#include("@/include/header.html")
-	<h3>
-		<a href="javascript:;" onclick="alertAS();">点击事件</a>
-	</h3>
+#include("@/include/header.html")
+<h3>
+    <a href="javascript:;" onclick="alertAS();">点击事件</a>
+</h3>
 
-	<div class="formMain">
-		<form 
-			id="abc" 
-			zform-api-url="/api/v2/resource/add"
-			zform-query = 'siteid|abc'
-			zform-submit-method = '__CUSTOM_API__'
-			zform-submit-before = 'submitBefore'
-			zform-submit-success = 'submitSuccess'
-			zform-submit-error = 'submitError'
-		>
-			<p><strong>本库不依赖任何css样式，网页请自己设计制作。</strong></p>
-			<input type="hidden" name="is_close_mem" value='1'/>
-			<input class="formInput" autocomplete="off"  value='13006995834' type="text" placeholder="请输入手机号" name="mobile"  zform-callback= 'is_mobile'/><br />
-			<input class="formInput" autocomplete="off"  value='王大二' type="text" placeholder="请输入姓名" name="realname"/><br />
-			<input class="formInput" autocomplete="off" value='1994-01-09' type="text" placeholder="请输入生日"  name="birthday"/><br />
-			<input type="radio" name="sex" value="M" checked  zform-callback= 'is_sex'>男<br>
-			<input type="radio" name="sex" value="F"  zform-callback= 'is_sex'>女 <br />
-			<div>=====================</div>
-			 年龄: <select name="age"  zform-callback= 'check_age'>
-				<option value ="1">1岁</option>
-				<option value ="2">2岁</option>
-				<option value="5">5岁</option>
-				<option value="10">10岁</option>
-			  </select>
-			  <br /><br/>
-			<label><input name="cscode" type="checkbox" value="tklk" checked="checked" zform-callback= 'check_cscode' />乐康2018 </label> 
-			<label><input name="cscode" type="checkbox" value="tk" zform-callback= 'check_cscode'/>泰康 </label> 
-			<label><input name="cscode" type="checkbox" value="pa" zform-callback= 'check_cscode' />平安 </label> 
-			<br/><br/>
-			<input type="checkbox" name="isagree" value="1" checked="checked"  zform-callback= 'check_isagree' />同意服务条款
-			<br/><br/>
-			<button class="button" type="button" onclick="alert(zform.Core.println('abc'));return false;">获取所有值</button>
-			<button class="button" type="button" onclick="alert(zform.Core.getConfig('abc'));return false;">获取配置</button>
-			<button class="button" type="button" onclick="zform.Core.Submit('abc');return false;">提交</button>
-		</form>
-	</div>
+<div class="formMain">
+    <form
+            id="abc"
+            zform-api-url="/api/v2/resource/add"
+            zform-query='siteid|abc'
+            zform-submit-method='__CUSTOM_API__'
+            zform-submit-before='submitBefore'
+            zform-submit-success='submitSuccess'
+            zform-submit-error='submitError'
+    >
+        <p><strong>本库不依赖任何css样式，网页请自己设计制作。</strong></p>
+        <input type="hidden" name="is_close_mem" value='1'/>
+        <input class="formInput" autocomplete="off" value='13006995834' type="text" placeholder="请输入手机号" name="mobile"
+               zform-callback='is_mobile'/><br/>
+        <input class="formInput" autocomplete="off" value='王大二' type="text" placeholder="请输入姓名" name="realname"/><br/>
+        <input class="formInput" autocomplete="off" value='1994-01-09' type="text" placeholder="请输入生日" name="birthday"/><br/>
+        <input type="radio" name="sex" value="M" checked zform-callback='is_sex'>男<br>
+        <input type="radio" name="sex" value="F" zform-callback='is_sex'>女 <br/>
+        <div>=====================</div>
+        年龄: <select name="age" zform-callback='check_age'>
+        <option value="1">1岁</option>
+        <option value="2">2岁</option>
+        <option value="5">5岁</option>
+        <option value="10">10岁</option>
+    </select>
+        <br/><br/>
+        <label><input name="cscode" type="checkbox" value="tklk" checked="checked" zform-callback='check_cscode'/>乐康2018
+        </label>
+        <label><input name="cscode" type="checkbox" value="tk" zform-callback='check_cscode'/>泰康 </label>
+        <label><input name="cscode" type="checkbox" value="pa" zform-callback='check_cscode'/>平安 </label>
+        <br/><br/>
+        <input type="checkbox" name="isagree" value="1" checked="checked" zform-callback='check_isagree'/>同意服务条款
+        <br/><br/>
+        <button class="button" type="button" onclick="alert(zform.Core.println('abc'));return false;">获取所有值</button>
+        <button class="button" type="button" onclick="alert(zform.Core.getConfig('abc'));return false;">获取配置</button>
+        <button class="button" type="button" onclick="zform.Core.Submit('abc');return false;">提交</button>
+    </form>
+</div>
 </body>
 <!-- <script type="text/javascript" src="./dist/zform.js"></script> -->
 <!-- <script type="text/javascript">
@@ -53,68 +55,69 @@ t.showName();
 </script> -->
 <script type="text/javascript" src="/js/myZform.js"></script>
 <script type="text/javascript">
-function alertAS(){
-	alert("zform version:"+zform.version())
-}
+    function alertAS() {
+        alert("zform version:" + zform.Core.version())
+    }
 
-function is_mobile(value){
-	if(!(/^1[3456789]\d{9}$/.test(value))){ 
-		alert("手机号码有误，请重填");  
-		return false; 
-	}
-	return true;
-}
-function is_sex(value){
-	if(!value){
-		alert("性别不能为空");
-		return false;
-	}
-	return true;
-}
+    function is_mobile(value) {
+        if (!(/^1[3456789]\d{9}$/.test(value))) {
+            alert("手机号码有误，请重填");
+            return false;
+        }
+        return true;
+    }
 
-function check_age(value){
-	if (value<3){
-		alert("年龄不能少于3岁");
-		return false;
-	}
-	return true;
-}
+    function is_sex(value) {
+        if (!value) {
+            alert("性别不能为空");
+            return false;
+        }
+        return true;
+    }
 
-function check_cscode (value){
-	if(!value){
-		alert("请选择cscode");
-		return false;
-	}
+    function check_age(value) {
+        if (value < 3) {
+            alert("年龄不能少于3岁");
+            return false;
+        }
+        return true;
+    }
 
-	var arr = value.split(',');
-	if (arr.length>1) {
-		alert("暂时只支持一个cscode哦");
-		return false;
-	}
+    function check_cscode(value) {
+        if (!value) {
+            alert("请选择cscode");
+            return false;
+        }
 
-	return true;
-}
+        var arr = value.split(',');
+        if (arr.length > 1) {
+            alert("暂时只支持一个cscode哦");
+            return false;
+        }
 
-function check_isagree(value){
-	if(!value){
-		alert("请同意服务条款");
-		return false;
-	}
-	return true;
-}
+        return true;
+    }
 
-function submitSuccess (res){
-	alert("网络请求成功,返回的数据为:\n" + JSON.stringify(res));
-}
+    function check_isagree(value) {
+        if (!value) {
+            alert("请同意服务条款");
+            return false;
+        }
+        return true;
+    }
 
-function submitBefore(){
-	alert("提交前调用的函数");
-	return true;
-}
+    function submitSuccess(res) {
+        alert("网络请求成功,返回的数据为:\n" + JSON.stringify(res));
+    }
 
-function submitError (err) {
-	alert("网络请求出错,错误为:\n" + JSON.stringify(err));
-}
+    function submitBefore() {
+        alert("提交前调用的函数");
+        return true;
+    }
+
+    function submitError(err) {
+        alert("网络请求出错,错误为:\n" + JSON.stringify(err));
+    }
 
 </script>
 </html>
