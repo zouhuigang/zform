@@ -12,7 +12,7 @@ const conf = [prex + 'api-url', prex + 'submit-before', prex + 'submit-success',
 
 const zform = {
     id: 'formid',
-    versionNo: '1.0.3',
+    versionNo: '1.0.4',
     version() {
         return util.showString(this.versionNo)
     }
@@ -61,16 +61,21 @@ async function submiBeforetPlugin(form_id, is_ver_success) {
     let verifyCodeFunc = $_form.attr("zform-sms-verify");
     let mobileName = $_form.attr("zform-sms-mobile_name")
     let codeName = $_form.attr("zform-sms-code_name")
+    let smsUrl = $_form.attr("zform-sms-url") || '/api/v1/financialbusiness/datahandler'
     let mobile = zjq('input[name="' + mobileName + '"]').val();
     let code = zjq('input[name="' + codeName + '"]').val();
     if (verifyCodeFunc && mobile && code) {
-        let sms_result = await api.__VER_CODE__('/api/v1/financialbusiness/datahandler', mobile, code)
-        let sms_ver_success = false;
-        if (sms_result.status == 200) {
+        if (smsUrl == '__VIRTUAL_API__') {
             sms_ver_success = true
-        }
-        if (verifyCodeFunc && !_win_this[verifyCodeFunc].call(this, mobile, code, sms_ver_success)) {
-            is_ver_success = false;
+        } else { 
+            let sms_result = await api.__VER_CODE__(smsUrl, mobile, code)
+            let sms_ver_success = false;
+            if (sms_result.status == 200) {
+                sms_ver_success = true
+            }
+            if (verifyCodeFunc && !_win_this[verifyCodeFunc].call(this, mobile, code, sms_ver_success)) {
+                is_ver_success = false;
+            }
         }
     }
 
@@ -111,13 +116,16 @@ zform.Submit = (form_id) => {
         //验证通过
         if (is_ver_success) {
             let apiUrl = $_form.attr(prex + 'api-url');
-            let submitMethod = $_form.attr(prex + 'submit-method');
-            if (submitMethod == '__CUSTOM_API__') {
-                return api.__CUSTOM_API__(apiUrl, eleList, submitSuccessCallback, submitErrorCallback);
-            } else if (submitMethod == '__JSON_RAW__') {
-                return api.__JSON_RAW__(apiUrl, eleList, submitSuccessCallback, submitErrorCallback);
+            if (apiUrl == '__VIRTUAL_API__') {
+                return api.__VIRTUAL__(apiUrl, eleList, submitSuccessCallback, '__VIRTUAL__SUBMIT__');
+            } else { 
+                let submitMethod = $_form.attr(prex + 'submit-method');
+                if (submitMethod == '__CUSTOM_API__') {
+                    return api.__CUSTOM_API__(apiUrl, eleList, submitSuccessCallback, submitErrorCallback);
+                } else if (submitMethod == '__JSON_RAW__') {
+                    return api.__JSON_RAW__(apiUrl, eleList, submitSuccessCallback, submitErrorCallback);
+                }
             }
-
         }
     });
 }
@@ -154,7 +162,12 @@ zform.SendCode = (form_id, buttonId) => {
     }
 
     //发送短信
-    return api.__SEND_CODE__('/api/v1/financialbusiness/datahandler', mobile, submitSuccessCallback, submitErrorCallback);
+    let apiUrl = $_form.attr(prex + 'sms-url')||'/api/v1/financialbusiness/datahandler';
+    if (apiUrl == '__VIRTUAL_API__') {
+        return api.__VIRTUAL__(apiUrl, {}, submitSuccessCallback, '__VIRTUAL__SMS__');
+    } else { 
+        return api.__SEND_CODE__(apiUrl, mobile, submitSuccessCallback, submitErrorCallback);
+    }
 }
 
 module.exports = {

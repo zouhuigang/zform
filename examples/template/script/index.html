@@ -12,12 +12,16 @@
 <div class="formMain">
     <form
             id="abc"
-            zform-api-url="/api/v2/resource/add"
+            zform-api-url="__VIRTUAL_API__"
             zform-query='siteid|abc'
             zform-submit-method='__CUSTOM_API__'
             zform-submit-before='submitBefore'
             zform-submit-success='submitSuccess'
             zform-submit-error='submitError'
+            zform-sms-verify = 'verCode'
+			zform-sms-mobile_name = 'mobile'
+			zform-sms-code_name = 'sms_code'
+			zform-sms-url="__VIRTUAL_API__"
     >
         <p><strong>本库不依赖任何css样式，网页请自己设计制作。</strong></p>
         <input type="hidden" name="is_close_mem" value='1'/>
@@ -40,6 +44,9 @@
         <label><input name="cscode" type="checkbox" value="tk" zform-callback='check_cscode'/>泰康 </label>
         <label><input name="cscode" type="checkbox" value="pa" zform-callback='check_cscode'/>平安 </label>
         <br/><br/>
+        <input class="formInput" autocomplete="off" type="text"  value="" zform-callback= 'is_code' placeholder="验证码"  name= 'sms_code'><br />
+		<input class="button1" type="button" id="zphone" zform-callback='smsHandle' value="获取验证码" onclick="return zform.Core.SendCode('abc','zphone');" />
+			
         <input type="checkbox" name="isagree" value="1" checked="checked" zform-callback='check_isagree'/>同意服务条款
         <br/><br/>
         <button class="button" type="button" onclick="alert(zform.Core.println('abc'));return false;">获取所有值</button>
@@ -106,8 +113,30 @@ t.showName();
         return true;
     }
 
-    function submitSuccess(res) {
-        alert("网络请求成功,返回的数据为:\n" + JSON.stringify(res));
+    function is_code(value) {
+        if(!value){
+            alert("短信验证码不能为空");
+            return false;
+        }
+        return true;
+    }
+
+
+    function verCode(user_mobile, user_code, background_verfiy_result){
+        if(!background_verfiy_result){
+            console.info(user_mobile, user_code, background_verfiy_result);
+            alert(user_mobile+",短信验证失败");
+            return false;
+        }
+        return true;
+    }
+    function submitSuccess(method, res) {
+        if (method == '__VIRTUAL__SMS__') { 
+            var timer = new zform.Timeer.Timeer('abc','zphone',60);
+            timer.Start();
+	    }else{
+            alert("网络请求成功,返回的数据为:\n" + JSON.stringify(res));
+         }
     }
 
     function submitBefore() {

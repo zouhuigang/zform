@@ -85,6 +85,18 @@ export function __JSON_RAW__ (url, params, submitSuccessCallback, submitErrorCal
 	});
 }
 
+/** 
+ * 虚拟API,不发送真实请求
+*/
+export function __VIRTUAL__ (url, params, submitSuccessCallback, method) {
+	let __this = this;
+	let form_data = {}
+	for (var i = 0; i < params.length; i++) {
+		let item = params[i];
+		form_data[item.name] = item.value
+	}
+	submitSuccessCallback.call(this,method,form_data);
+}
 
 // action: send_sms
 // mobile: 18117000087
